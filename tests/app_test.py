@@ -76,8 +76,23 @@ def test_messages(client):
     assert b"&lt;Hello&gt;" in rv.data
     assert b"<strong>HTML</strong> allowed here" in rv.data
 
+def test_search_message(client):
+    """Ensure the messages can be searched"""
+    login(client, app.config["USERNAME"], app.config["PASSWORD"])
+    rv = client.post(
+        "/add",
+        data=dict(title="<Search This>", text="<strong>HTML</strong> allowed here"),
+        follow_redirects=True,
+    )
+    rv = client.get('/search/?query=Search')
+    assert b"No entries here so far" not in rv.data
+    assert b"&lt;Search This&gt;" in rv.data
+    assert b"<strong>HTML</strong> allowed here" in rv.data
+
 def test_delete_message(client):
     """Ensure the messages are being deleted"""
     rv = client.get('/delete/1')
     data = json.loads(rv.data)
     assert data["status"] == 1
+
+
