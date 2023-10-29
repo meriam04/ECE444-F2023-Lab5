@@ -1,7 +1,4 @@
 tests/__pycache__
 project/__pycache__
+env/
 test.db
-env
-*.pyc
-*.DS_Store
-__pycache__
