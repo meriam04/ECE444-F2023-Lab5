@@ -91,8 +91,31 @@ def test_search_message(client):
 
 def test_delete_message(client):
     """Ensure the messages are being deleted"""
-    rv = client.get('/delete/1')
+    rv = client.get("/delete/1")
+    data = json.loads(rv.data)
+    assert data["status"] == 0
+    login(client, app.config["USERNAME"], app.config["PASSWORD"])
+    rv = client.get("/delete/1")
     data = json.loads(rv.data)
     assert data["status"] == 1
 
+def test_login_required_decorator(client):
+    with client:
+        # Simulate a request to a protected route without being logged in.
+        response = client.get('/delete/1')
+        assert response.status_code == 401
+        json_data = json.loads(response.data)
+        assert json_data['status'] == 0
+        assert json_data['message'] == 'Please log in.'
+
+        # Now, simulate a request to a protected route while being logged in.
+        login(client, app.config["USERNAME"], app.config["PASSWORD"])
+        response = client.get('/delete/1')
+        assert response.status_code == 200
+        json_data = json.loads(response.data)
+        assert json_data['status'] == 1
+        assert json_data['message'] == 'Post Deleted'
+
+    # Clean up and logout after the test
+    logout(client)
 
