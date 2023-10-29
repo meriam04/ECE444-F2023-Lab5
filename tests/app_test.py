@@ -76,6 +76,7 @@ def test_messages(client):
     assert b"&lt;Hello&gt;" in rv.data
     assert b"<strong>HTML</strong> allowed here" in rv.data
 
+
 def test_search_message(client):
     """Ensure the messages can be searched"""
     login(client, app.config["USERNAME"], app.config["PASSWORD"])
@@ -84,10 +85,11 @@ def test_search_message(client):
         data=dict(title="<Search This>", text="<strong>HTML</strong> allowed here"),
         follow_redirects=True,
     )
-    rv = client.get('/search/?query=Search')
+    rv = client.get("/search/?query=Search")
     assert b"No entries here so far" not in rv.data
     assert b"&lt;Search This&gt;" in rv.data
     assert b"<strong>HTML</strong> allowed here" in rv.data
+
 
 def test_delete_message(client):
     """Ensure the messages are being deleted"""
@@ -99,23 +101,23 @@ def test_delete_message(client):
     data = json.loads(rv.data)
     assert data["status"] == 1
 
+
 def test_login_required_decorator(client):
     with client:
         # Simulate a request to a protected route without being logged in.
-        response = client.get('/delete/1')
+        response = client.get("/delete/1")
         assert response.status_code == 401
         json_data = json.loads(response.data)
-        assert json_data['status'] == 0
-        assert json_data['message'] == 'Please log in.'
+        assert json_data["status"] == 0
+        assert json_data["message"] == "Please log in."
 
         # Now, simulate a request to a protected route while being logged in.
         login(client, app.config["USERNAME"], app.config["PASSWORD"])
-        response = client.get('/delete/1')
+        response = client.get("/delete/1")
         assert response.status_code == 200
         json_data = json.loads(response.data)
-        assert json_data['status'] == 1
-        assert json_data['message'] == 'Post Deleted'
+        assert json_data["status"] == 1
+        assert json_data["message"] == "Post Deleted"
 
     # Clean up and logout after the test
     logout(client)
-
