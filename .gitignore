@@ -2,7 +2,6 @@ tests/__pycache__
 project/__pycache__
 env/
 test.db
-project/flaskr.db
 *.pyc
 *.DS_Store
 __pycache__
