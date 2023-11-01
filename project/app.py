@@ -31,7 +31,6 @@ if url.startswith("postgres://"):
     url = url.replace("postgres://", "postgresql://", 1)
 
 SQLALCHEMY_DATABASE_URI = url
-# SQLALCHEMY_DATABASE_URI = "postgres://wcbdbphtwahpbo:fa53b9e32fe175b48e78fa0e02e35408fe7a2f36241a91d34e8f6cedb57c8d39@ec2-44-215-1-253.compute-1.amazonaws.com:5432/d4f9uiemmvukf8"
 SQLALCHEMY_TRACK_MODIFICATIONS = False
 
 
